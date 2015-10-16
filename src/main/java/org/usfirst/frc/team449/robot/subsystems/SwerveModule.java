@@ -68,7 +68,7 @@ public class SwerveModule extends Subsystem {
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
 	public void rotate(double rotationDegrees) {
-
+		// TODO: implement
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SwerveModule extends Subsystem {
 	 * @param speed velocity of the motor
 	 */
 	public void set(double speed) {
-
+		// TODO: implement
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class SwerveModule extends Subsystem {
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
 	public void goTo(double speed, double rotationDegrees) {
-
+		// TODO: implement, maybe rename
 	}
 
 	@Override
