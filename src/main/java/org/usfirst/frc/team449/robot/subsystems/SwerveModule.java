@@ -50,7 +50,14 @@ public class SwerveModule extends Subsystem {
 	 */
 	private final PIDController rotationController;
 
-	private double lastSet = 0;
+	/**
+	 * the previous value the velocity was set to
+	 */
+	private double lastSetVelocity;
+	/**
+	 * the previous value the rotation was set to
+	 */
+	private double lastSetRotation;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -69,7 +76,8 @@ public class SwerveModule extends Subsystem {
 		this.velocityController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, velocityEncoder, velocityMotor);
 		this.rotationController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, rotationEncoder, rotationMotor);
 
-		this.lastSet = 0;
+		this.lastSetVelocity = 0;
+		this.lastSetRotation = 0;
 	}
 
 	/**
