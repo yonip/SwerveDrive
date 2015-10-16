@@ -10,7 +10,16 @@ import org.usfirst.frc.team449.robot.RobotMap;
 import java.util.ArrayList;
 
 /**
+ * A class to control each module of the swerve drive
+ * The physical swerve module has 2 motor and encoder pairs
+ * One motor-encoder pair controls the rotation of the wheel around the vertical axis (ie where the wheel is facing)
+ * The other motor-encoder pair controls the speed of the wheels rotation around a horizontal axis, directly affecting the speed of the wheel
  *
+ * The former will most easily and intuitively be controlled via its PID controller, as we are approaching a setpoint that the encoder can easily measure
+ * The latter, as the team had discovered in 2015 (Recycle Rush) is very hard to control via PID, so it will likely be controlled via direct voltage
+ *
+ * That said, PID control for either should be programmatically toggleable, and this class will have the architecture to support any configuration of PID and non-PID
+ * TODO: use a bitmask to control what motor-encoder pair(s) use PID (if any)
  */
 public class SwerveModule extends Subsystem {
 
