@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * The latter, as the team had discovered in 2015 (Recycle Rush) is very hard to control via PID, so it will likely be controlled via direct voltage
  *
  * That said, PID control for either should be programmatically toggleable, and this class will have the architecture to support any configuration of PID and non-PID
- * TODO: use a bitmask to control what motor-encoder pair(s) use PID (if any)
+ * TODO: use two boolean flags to toggle PID for rotation and velocity
  */
 public class SwerveModule extends Subsystem {
 
@@ -50,7 +50,14 @@ public class SwerveModule extends Subsystem {
 	 */
 	private final PIDController rotationController;
 
-	private double lastSet = 0;
+	/**
+	 * the previous value the velocity was set to
+	 */
+	private double lastSetVelocity;
+	/**
+	 * the previous value the rotation was set to
+	 */
+	private double lastSetRotation;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -69,7 +76,8 @@ public class SwerveModule extends Subsystem {
 		this.velocityController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, velocityEncoder, velocityMotor);
 		this.rotationController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, rotationEncoder, rotationMotor);
 
-		this.lastSet = 0;
+		this.lastSetVelocity = 0;
+		this.lastSetRotation = 0;
 	}
 
 	/**
