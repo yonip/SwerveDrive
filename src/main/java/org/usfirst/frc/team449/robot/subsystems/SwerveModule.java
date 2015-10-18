@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * The latter, as the team had discovered in 2015 (Recycle Rush) is very hard to control via PID, so it will likely be controlled via direct voltage
  *
  * That said, PID control for either should be programmatically toggleable, and this class will have the architecture to support any configuration of PID and non-PID
- * TODO: use a bitmask to control what motor-encoder pair(s) use PID (if any)
+ * TODO: use two boolean flags to toggle PID for rotation and velocity
  */
 public class SwerveModule extends Subsystem {
 
