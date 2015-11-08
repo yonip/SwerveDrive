@@ -1,14 +1,14 @@
-package org.usfirst.frc.team449.robot.subsystems;
+package org.usfirst.frc.team449.robot.swerve;
 
-import org.usfirst.frc.team449.robot.RobotMap;
-import org.usfirst.frc.team449.robot.commands.DriveSwerveRobot;
+import org.usfirst.frc.team449.robot.OIMap;
+import org.usfirst.frc.team449.robot.swerve.commands.DriveSwerveRobot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.swerve.components.MotorCluster;
 
 /**
  * The DriveSwerve subsystem.
@@ -17,33 +17,21 @@ public class DriveSwerve extends Subsystem {
     
 	//drive PID motor systems
 	/**
-	 * MotorCluster that controls the speed of the wheels on the left
+	 * SwerveModule that controls the speed and rotation of the front-left wheel
 	 */
-	private final MotorCluster leftMotors;
+	private final SwerveModule frontLeftMotors;
 	/**
-	 * MotorCluster that controls teh speed of the wheels on the right
+	 * SwerveModule that controls the speed and rotation of the front-right wheel
 	 */
-	private final MotorCluster rightMotors;
-
+	private final SwerveModule frontRightMotors;
 	/**
-	 * the encoder on the wheels on the left
+	 * SwerveModule that controls the speed and rotation of the front-left wheel
 	 */
-	private final Encoder leftEncoder;
+	private final SwerveModule backLeftMotors;
 	/**
-	 * the encoder on the wheels on the right
+	 * SwerveModule that controls the speed and rotation of the front-right wheel
 	 */
-	private final Encoder rightEncoder;
-
-	/**
-	 * a PIDController to control the motors on the left via PID using their encoders
-	 */
-	private final PIDController leftController;
-	/**
-	 * a PIDController to control the motors on the right via PID using their encoders
-	 */
-	private final PIDController rightController;
-
-	//four swerve modules with 2 motor(clusters) and 2 encoders and a PID controller holding both as well
+	private final SwerveModule backRightMotors;
 
 	/**
 	 * diameter of the wheels on the robot
@@ -71,34 +59,37 @@ public class DriveSwerve extends Subsystem {
 		System.out.println("DriveSwerve init started");
 
 		//initialize motor clusters and add slaves
-		this.leftMotors = new MotorCluster(new VictorSP(RobotMap.DRIVE_L1)); 	//first motor
-		this.leftMotors.addSlave(new VictorSP(RobotMap.DRIVE_L2));				//attach second motor
+		this.frontLeftMotors = generateModule(SwerveMap.Motors.Velocity.FRONT_LEFT, SwerveMap.Encoders.Velocity.FRONT_LEFT_A,
+				SwerveMap.Encoders.Velocity.FRONT_LEFT_B, SwerveMap.Motors.Rotater.FRONT_LEFT, SwerveMap.Encoders.Rotater.FRONT_LEFT_A,
+				SwerveMap.Encoders.Rotater.FRONT_LEFT_B);
+		this.leftMotors = new MotorCluster(new VictorSP(OIMap.DRIVE_L1)); 	//first motor
+		this.leftMotors.addSlave(new VictorSP(OIMap.DRIVE_L2));				//attach second motor
 		
-		this.rightMotors = new MotorCluster(new VictorSP(RobotMap.DRIVE_R1)); 	//first motor
-		this.rightMotors.addSlave(new VictorSP(RobotMap.DRIVE_R2));				//attach second motor
+		this.rightMotors = new MotorCluster(new VictorSP(OIMap.DRIVE_R1)); 	//first motor
+		this.rightMotors.addSlave(new VictorSP(OIMap.DRIVE_R2));				//attach second motor
 		
-		this.leftEncoder 	= new Encoder(RobotMap.DRIVE_ENCODER_LA,RobotMap.DRIVE_ENCODER_LB, false);
-		this.rightEncoder	= new Encoder(RobotMap.DRIVE_ENCODER_RA,RobotMap.DRIVE_ENCODER_RB, false);
+		this.leftEncoder 	= new Encoder(OIMap.DRIVE_ENCODER_LA, OIMap.DRIVE_ENCODER_LB, false);
+		this.rightEncoder	= new Encoder(OIMap.DRIVE_ENCODER_RA, OIMap.DRIVE_ENCODER_RB, false);
 		
 		this.wheelDiameter = 4*Math.PI;
-		this.leftEncoder.setDistancePerPulse(wheelDiameter/RobotMap.DRIVE_ENCODER_CPR);
-		this.rightEncoder.setDistancePerPulse(-wheelDiameter/RobotMap.DRIVE_ENCODER_CPR);	//negated because mirrored
+		this.leftEncoder.setDistancePerPulse(wheelDiameter/ OIMap.DRIVE_ENCODER_CPR);
+		this.rightEncoder.setDistancePerPulse(-wheelDiameter/ OIMap.DRIVE_ENCODER_CPR);	//negated because mirrored
 		
 		
 		this.leftEncoder.setPIDSourceParameter(PIDSourceParameter.kRate);
 		this.rightEncoder.setPIDSourceParameter(PIDSourceParameter.kRate);
 
-		this.leftController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, leftEncoder, this.leftMotors);
-		this.rightController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, rightEncoder, this.rightMotors);
+		this.leftController = new PIDController(OIMap.DRIVE_P, OIMap.DRIVE_I, OIMap.DRIVE_D, OIMap.DRIVE_F, leftEncoder, this.leftMotors);
+		this.rightController = new PIDController(OIMap.DRIVE_P, OIMap.DRIVE_I, OIMap.DRIVE_D, OIMap.DRIVE_F, rightEncoder, this.rightMotors);
 		
-		this.maxRate = RobotMap.DRIVE_MAX_RATE;
+		this.maxRate = OIMap.DRIVE_MAX_RATE;
 
-		this.setManual(RobotMap.DRIVE_DEFAULT_MANUAL);
+		this.setManual(OIMap.DRIVE_DEFAULT_MANUAL);
 		System.out.println("DriveSwerve init finished");
 	}//end drive
 	
 	/**
-	 * Sends power to the two left and right two motors on the drive frame. If in PID control, it is fraction of max absolute speed set in RobotMap.
+	 * Sends power to the two left and right two motors on the drive frame. If in PID control, it is fraction of max absolute speed set in OIMap.
 	 * If in Manual, it is fraction of maximum power.
 	 * @param leftPower - The fraction of power to supply to the two left motors, from -1 to 1
 	 * @param rightPower - The fraction of power to supply to the two right motors, from -1 to 1
@@ -190,5 +181,9 @@ public class DriveSwerve extends Subsystem {
     {
     	return this.isManual;
     }
+
+	protected static SwerveModule generateModule(int velocityMotorPort, int velocityEncoderPortA, int velocityEncoderPortB, int rotationMotorPort, int rotationEncoderPortA, int rotationEncoderPortB) {
+		return new SwerveModule(new VictorSP(velocityMotorPort), new Encoder(velocityEncoderPortA, velocityEncoderPortB), new VictorSP(rotationMotorPort), new Encoder(rotationEncoderPortA, rotationEncoderPortB));
+	}
 }//end class
 

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.usfirst.frc.team449.robot.subsystems;
+package org.usfirst.frc.team449.robot.swerve.components;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team449.robot.RobotMap;
+import org.usfirst.frc.team449.robot.OIMap;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -38,7 +38,7 @@ public class PIDMotor extends PIDSubsystem {
     // Initialize your subsystem here
     /**
      * initialize the PIDMotor
-     * @param config the RobotMap object with all constants
+     * @param config the OIMap object with all constants
      * @param p		the proportional term
      * @param i		the integral term
      * @param d		the derivative term
@@ -48,7 +48,7 @@ public class PIDMotor extends PIDSubsystem {
      * @param encoder	the encoder that is providing feedback 
      * @param mode		the mode at which the encoder will operate
      */
-    public PIDMotor(RobotMap config, double p, double i, double d, double initSet, double tolerance, SpeedController motor, Encoder encoder, int mode) {
+    public PIDMotor(OIMap config, double p, double i, double d, double initSet, double tolerance, SpeedController motor, Encoder encoder, int mode) {
         super(p, i, d);
         
         //initialize the variables

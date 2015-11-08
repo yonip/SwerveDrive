@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.commands;
+package org.usfirst.frc.team449.robot.swerve.commands;
 
 import org.usfirst.frc.team449.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,9 +17,9 @@ public class DriveSwerveRobot extends Command {
     }
 
     protected void execute() {
-    	double pitch = Robot.OI.getSwerveStickPitch();
-    	double roll = Robot.OI.getSwerveStickRoll();
-        double yaw = Robot.OI.getSwerveStickYaw();
+    	double x = Robot.OI.getSwerveStickX();
+    	double y = Robot.OI.getSwerveStickY();
+        double theta = Robot.OI.getSwerveStickTheta();
 
     	// figure out swerve controls here
     }

@@ -1,13 +1,10 @@
-package org.usfirst.frc.team449.robot.subsystems;
+package org.usfirst.frc.team449.robot.swerve;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team449.robot.RobotMap;
-
-import java.util.ArrayList;
+import org.usfirst.frc.team449.robot.OIMap;
 
 /**
  * A class to control each module of the swerve drive
@@ -73,8 +70,8 @@ public class SwerveModule extends Subsystem {
 		this.rotationMotor = rotationMotor;
 		this.rotationEncoder = rotationEncoder;
 
-		this.velocityController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, velocityEncoder, velocityMotor);
-		this.rotationController = new PIDController(RobotMap.DRIVE_P, RobotMap.DRIVE_I, RobotMap.DRIVE_D, RobotMap.DRIVE_F, rotationEncoder, rotationMotor);
+		this.velocityController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, velocityEncoder, velocityMotor);
+		this.rotationController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, rotationEncoder, rotationMotor);
 
 		this.lastSetVelocity = 0;
 		this.lastSetRotation = 0;
@@ -101,6 +98,7 @@ public class SwerveModule extends Subsystem {
 	 * @param speed velocity of the wheel
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
+
 	public void goTo(double speed, double rotationDegrees) {
 		// TODO: implement, maybe rename
 	}
