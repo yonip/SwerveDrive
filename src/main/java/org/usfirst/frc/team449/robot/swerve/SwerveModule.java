@@ -16,9 +16,8 @@ import org.usfirst.frc.team449.robot.OIMap;
  * The latter, as the team had discovered in 2015 (Recycle Rush) is very hard to control via PID, so it will likely be controlled via direct voltage
  *
  * That said, PID control for either should be programmatically toggleable, and this class will have the architecture to support any configuration of PID and non-PID
- * TODO: use two boolean flags to toggle PID for rotation and velocity
  */
-public class SwerveModule extends Subsystem {
+public class SwerveModule {
 
 	/**
 	 * the motor to control the velocity of this module's wheel
@@ -55,6 +54,14 @@ public class SwerveModule extends Subsystem {
 	 * the previous value the rotation was set to
 	 */
 	private double lastSetRotation;
+	/**
+	 * whether the velocity is controlled manually (false for PID)
+	 */
+	private static boolean manualVelocity;
+	/**
+	 * whether rotation is controlled manually (false for PID)
+	 */
+	private static boolean manualRotation;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -63,7 +70,7 @@ public class SwerveModule extends Subsystem {
 	 * @param rotationMotor the motor to control the rotation of this module's wheel
 	 * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel
 	 */
-	public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, SpeedController rotationMotor, Encoder rotationEncoder)
+	public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, boolean isManualVelocity, SpeedController rotationMotor, Encoder rotationEncoder, boolean isManualRotation)
 	{
 		this.velocityMotor = velocityMotor;
 		this.velocityEncoder = velocityEncoder;
@@ -94,17 +101,45 @@ public class SwerveModule extends Subsystem {
 	}
 
 	/**
-	 * sets the heading of the module
+	 * sets the heading of the module, robot centric
 	 * @param speed velocity of the wheel
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
-
 	public void goTo(double speed, double rotationDegrees) {
 		// TODO: implement, maybe rename
 	}
 
-	@Override
-	protected void initDefaultCommand() {
-		//no default command yo
+	/**
+	 * whether the velocity is controlled manually (PID otherwise)
+	 * @return true if velocity of all modules is controlled manually, and false otherwise
+	 */
+	public static boolean isManualVelocity() {
+		return manualVelocity;
+	}
+
+	/**
+	 * whether the rotation is controlled manually (PID otherwise)
+	 * @return true if rotation of all modules is controlled manually, and false otherwise
+	 */
+	public static boolean isManualRotation() {
+		return manualRotation;
+	}
+
+	/**
+	 * whether the velocity should be controlled manually (PID otherwise)
+	 * enables or disables the PID controller accordingly
+	 * @param isOn true if velocity of all modules should be controlled manually, and false otherwise
+	 */
+	public static boolean setManualVelocity(boolean isOn) {
+		// TODO implement
+	}
+
+	/**
+	 * whether the rotation should be controlled manually (PID otherwise)
+	 * enables or disables the PID controller accordingly
+	 * @param isOn true if rotation of all modules should be controlled manually, and false otherwise
+	 */
+	public static boolean setManualRotation(boolean isOn) {
+		// TODO implement
 	}
 }//end class

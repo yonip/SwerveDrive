@@ -7,60 +7,26 @@ package org.usfirst.frc.team449.robot.swerve;
  * floating around.
  */
 public class SwerveMap {
-	
-	//============================DriveSwerve Constants=======================
 	public static class Motors {
 		public static class Velocity {
-			/**
-		 	* motor controller channel for the front left drive motor
-		 	*/
 			public static final int FRONT_LEFT = -1;
-
-			/**
-			 * motor controller channel for the front right drive motor
-			 */
 			public static final int FRONT_RIGHT = -1;
-
-			/**
-			 * motor controller channel for the back left drive motor
-			 */
 			public static final int BACK_LEFT = -1;
-
-			/**
-			 * motor controller channel for the back right drive motor
-			 */
 			public static final int BACK_RIGHT = -1;
-
-
 		}
 		public static class Rotater {
-			/**
-			 * motor controller channel for the front left rotation motor
-			 */
 			public static final int FRONT_LEFT = -1;
-
-			/**
-			 * motor controller channel for the front right rotation motor
-			 */
 			public static final int FRONT_RIGHT = -1;
-
-			/**
-			 * motor controller channel for the back left rotation motor
-			 */
 			public static final int BACK_LEFT = -1;
-
-			/**
-			 * motor controller channel for the back right rotation motor
-			 */
 			public static final int BACK_RIGHT = -1;
 		}
 	}
 
 	public static class Encoders {
-		public static final int CPR = 256;
 
 		/* Motor controller channels. */
 		public static class Velocity {
+			public static final int CPR = 256;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
 			public static final int FRONT_RIGHT_A = -1;
@@ -72,6 +38,7 @@ public class SwerveMap {
 		}
 
 		public static class Rotater {
+			public static final int CPR = 256;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
 			public static final int FRONT_RIGHT_A = -1;
@@ -104,13 +71,18 @@ public class SwerveMap {
 	 */
 	public static final double F = 0;
 
+	public static final double WHEEL_DIAMETER = 4;
+
 	/**
 	 * Hard limit for DriveSwerve speed under PID control in Rotations per second
 	 */
 	public static final int MAX_RATE = 4;
-	
 	/**
-	 * whether default drive is manual or not (if not then PID)
+	 * whether by default velocity is controlled manually or not (if not then PID)
 	 */
-	public static final boolean DEFAULT_MANUAL = true;
+	public static final boolean DEFAULT_VELOCITY_MANUAL = true;
+	/**
+	 * whether by default rotation is controlled manually or not (if not then PID)
+	 */
+	public static final boolean DEFAULT_ROTATION_MANUAL = false;
 }

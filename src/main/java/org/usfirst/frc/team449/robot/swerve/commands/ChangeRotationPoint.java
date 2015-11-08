@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.swerve.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.Robot;
 
-import java.awt.*;
+import java.awt.Point;
 
 /**
  * Changes the point/axis around which the robot will be rotating around to the one passed in the constructor.
@@ -12,6 +12,7 @@ import java.awt.*;
  * This command only requires the initialize method to run and then it is done immediately. No other method must be implemented.
  */
 public class ChangeRotationPoint extends Command {
+    private final Point point;
 
     /**
      * Creates a new command that, when initialized, sets the point around which the robot is rotating to the given point.
@@ -20,6 +21,7 @@ public class ChangeRotationPoint extends Command {
      */
     public ChangeRotationPoint(Point p) {
     	requires(Robot.drive);
+        this.point = p;
     }
 
     protected void initialize() {
