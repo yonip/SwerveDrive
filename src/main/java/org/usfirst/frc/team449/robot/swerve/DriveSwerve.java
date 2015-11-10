@@ -65,12 +65,14 @@ public class DriveSwerve extends Subsystem {
 	 * @param xVelocity the x component of the vector for the robot to move in
 	 * @param yVelocity the y component of the vector for the robot to move in
 	 * @param rotationRadians how fast the robot should rotate in radians/second
-	 * @see
 	 */
-	public void goTo(double xVelocity, double yVelocity, double rotationRadians){
-		// TODO implement, glhf
+	public void goTo(double xVelocity, double yVelocity, double rotationRadians) {
+		// TODO account for robot rotation here
+		passTo(frontLeftMotors, -SwerveMap.HALF_WIDTH, SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
+		passTo(frontRightMotors, SwerveMap.HALF_WIDTH, SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
+		passTo(backLeftMotors, -SwerveMap.HALF_WIDTH, -SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
+		passTo(backRightMotors, SwerveMap.HALF_WIDTH, -SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
 	}
-
 
 	/**
 	 * the point around which the robot should rotate, relative to the robot
@@ -165,6 +167,37 @@ public class DriveSwerve extends Subsystem {
 		rotEnc.setPIDSourceParameter(PIDSourceParameter.kRate);
 
 		return new SwerveModule(new VictorSP(velocityMotorPort), velEnc, SwerveMap.DEFAULT_VELOCITY_MANUAL, new VictorSP(rotationMotorPort), rotEnc, SwerveMap.DEFAULT_ROTATION_MANUAL);
+	}
+
+	/**
+	 * calculates the angle and velocity for the given module based on the given paramaters.
+	 * @param module the module to assign velocity and rotation
+	 * @param moduleX the x-coordinate of the module, where right is positive, relative to the center of the robot
+	 * @param moduleY the y-coordinate of the module, where forward is positive, relative to the center of the robot
+	 * @param xVelocity the x component of the velocity vector for the robot
+	 * @param yVelocity the y component of the velocity vector for the robot
+	 * @param rotationRadians the rate of rotation of the whole robot, in radians per second
+	 * @param rotationPoint the point around which the robot will rotate, where (0,0) is the origin, forward si positive y and right is positive x
+	 */
+	protected static void passTo(SwerveModule module, double moduleX, double moduleY, double xVelocity, double yVelocity, double rotationRadians, Point rotationPoint) {
+		// to store the components of the rotation vector for each module
+		double deltaX, deltaY;
+		// the final components of the velocity vector for the module
+		double finalVelX, finalVelY;
+		// the actual variables that will be passed to the module
+		double magnitude, angleDegrees;
+		// first frontLeft module
+		moduleX = -SwerveMap.HALF_WIDTH;
+		moduleY = SwerveMap.HALF_LENGTH;
+		// components scaled according to their distance from the center for angular -> linear velocity
+		deltaX = moduleY-rotationPoint.getY();
+		deltaY = moduleX-rotationPoint.getX();
+		// first part for the respective component of the vector rotating, and the second for the vector translating
+		finalVelX = deltaX*rotationRadians + xVelocity;
+		finalVelY = deltaY*rotationRadians + yVelocity;
+		magnitude = Math.sqrt(finalVelX*finalVelX+finalVelY*finalVelY);
+		angleDegrees = Math.toDegrees(Math.atan2(finalVelY, finalVelX));
+		module.goTo(magnitude, angleDegrees);
 	}
 }//end class
 
