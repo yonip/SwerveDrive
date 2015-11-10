@@ -17,11 +17,11 @@ public class DriveSwerveRobot extends Command {
     }
 
     protected void execute() {
-    	double x = Robot.OI.getSwerveStickX();
-    	double y = Robot.OI.getSwerveStickY();
+        double x = Robot.OI.getSwerveStickX();
+        double y = Robot.OI.getSwerveStickY();
         double theta = Robot.OI.getSwerveStickTheta();
 
-    	// TODO figure out swerve controls here
+        // TODO pass through the values from the joystick calibrated to velocity to the swerve system
     }
 
     protected boolean isFinished() {

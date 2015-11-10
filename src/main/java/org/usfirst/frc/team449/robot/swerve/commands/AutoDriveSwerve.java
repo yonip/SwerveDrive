@@ -68,7 +68,7 @@ public class AutoDriveSwerve extends Command {
 		// 	x magnitude
 		// 	y magnitude
 		//  rotation magnitude
-		// TODO implement
+		// TODO pass through the values from the joystick calibrated to velocity to the swerve system
 	}
 
 	/**
