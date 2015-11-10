@@ -85,4 +85,22 @@ public class SwerveMap {
 	 * whether by default rotation is controlled manually or not (if not then PID)
 	 */
 	public static final boolean DEFAULT_ROTATION_MANUAL = false;
+	/**
+	 * the default linear velocity multiplier for the robot. might have separate levels of speed later on
+	 */
+	public static final double DEFAULT_LINEAR_VELOCITY_FACTOR = -1;
+	/**
+	 * the default angular velocity multiplier for the robot. might have separate levels of speed later on
+	 */
+	public static final double DEFAULT_ANGULAR_VELOCITY_FACTOR = -1;
+	/**
+	 * distance between the center of the robot and each side, in meters
+	 * should also be the magnitude of the "x coordinate" of all the swerve modules
+	 */
+	public static final double HALF_WIDTH = -1;
+	/**
+	 * distance between the center of the robot and the front and back, in meters
+	 * should also be the magnitude of the "y coordinate" of all the swerve modules
+	 */
+	public static final double HALF_LENGTH = -1;
 }
