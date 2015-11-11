@@ -186,9 +186,6 @@ public class DriveSwerve extends Subsystem {
 		double finalVelX, finalVelY;
 		// the actual variables that will be passed to the module
 		double magnitude, angleDegrees;
-		// first frontLeft module
-		moduleX = -SwerveMap.HALF_WIDTH;
-		moduleY = SwerveMap.HALF_LENGTH;
 		// components scaled according to their distance from the center for angular -> linear velocity
 		deltaX = moduleY-rotationPoint.getY();
 		deltaY = moduleX-rotationPoint.getX();
