@@ -114,9 +114,11 @@ public class DriveSwerve extends Subsystem {
 	 * whether the velocity should be controlled manually (PID otherwise)
 	 * @param isOn true if velocity of all modules should be controlled manually, and false otherwise
 	 */
-    public void setManualVelocity(boolean isOn)
-    {
-		SwerveModule.setManualVelocity(isOn);
+    public void setManualVelocity(boolean isOn) {
+		frontLeftMotors.setManualVelocity(isOn);
+		frontRightMotors.setManualVelocity(isOn);
+		backLeftMotors.setManualVelocity(isOn);
+		backRightMotors.setManualVelocity(isOn);
     }
 
 	/**
@@ -124,7 +126,10 @@ public class DriveSwerve extends Subsystem {
 	 * @param isOn true if rotation of all modules should be controlled manually, and false otherwise
 	 */
 	public void setManualRotation(boolean isOn) {
-		SwerveModule.setManualRotation(isOn);
+		frontLeftMotors.setManualRotation(isOn);
+		frontRightMotors.setManualRotation(isOn);
+		backLeftMotors.setManualRotation(isOn);
+		backRightMotors.setManualRotation(isOn);
 	}
 
 	/**
