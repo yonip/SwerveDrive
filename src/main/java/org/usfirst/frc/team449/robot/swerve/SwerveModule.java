@@ -131,7 +131,9 @@ public class SwerveModule {
 	 * @param isOn true if velocity of all modules should be controlled manually, and false otherwise
 	 */
 	public static boolean setManualVelocity(boolean isOn) {
-		// TODO implement
+		manualVelocity = isOn;
+		if(manualVelocity) velocityController.disable();
+		//why is this method static?
 	}
 
 	/**
@@ -140,6 +142,7 @@ public class SwerveModule {
 	 * @param isOn true if rotation of all modules should be controlled manually, and false otherwise
 	 */
 	public static boolean setManualRotation(boolean isOn) {
-		// TODO implement
+		manualRotation = isOn;
+		if(manualRotation) rotationController.disable();
 	}
 }//end class
