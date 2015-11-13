@@ -64,6 +64,8 @@ public class SwerveModule {
 	private static boolean manualRotation;
 	
 	private static final ROTATION_MOTOR_VELOCITY = 10;
+	
+	private static final VELOCITY_MOTOR_VELOCITY = 10;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -95,22 +97,24 @@ public class SwerveModule {
 		lastSetRotation = rotationDegrees;
 		
 		if(isManualRotation()){
-			while(rotationEncoder.getEncoderPosition() > setpoint)
-				motor.set(-ROTATION_MOTOR_VELOCITY);
-			while(rotationEncoder.getEncoderPosition() < setpoint)
-				motor.set(ROTATION_MOTOR_VELOCITY);
+			while(rotationEncoder.getEncoderPosition() > lastSetRotation)
+				rotationMotor.set(-ROTATION_MOTOR_VELOCITY);
+			while(rotationEncoder.getEncoderPosition() < lastSetRotation)
+				rotationMotor.set(ROTATION_MOTOR_VELOCITY);
 		}
 		else{
-			rotationController.setSetpoint(rotationDegrees);
+			rotationController.setSetpoint(lastSetRotation);
 		}	
 	}
 
 	/**
 	 * sets the velocity of the wheel
-	 * @param speed velocity of the motor
+	 * @param velocity velocity of the motor
 	 */
-	public void set(double speed) {
-		velocityMotor.set(speed);
+	public void set(double velocity) {
+		lastSetVelocity = velocity;
+		
+		velocityMotor.set(lastSetVelocity);
 	}
 
 	/**
