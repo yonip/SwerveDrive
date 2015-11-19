@@ -19,13 +19,13 @@ public class ChangeRotationPoint extends Command {
      * The point is defined such that (0,0) is the center of the robot, (1,0) is one meter to the right and (0,1) is one meter forward
      * @param p the point around which to rotate
      */
-    public ChangeRotationPoint(Point p) {
+    public ChangeRotationPoint(final Point p) {
     	requires(Robot.drive);
         this.point = p;
     }
 
     protected void initialize() {
-        // TODO implement
+        Robot.drive.setRotationPoint(point);
     }
 
     protected void execute() {
@@ -39,6 +39,5 @@ public class ChangeRotationPoint extends Command {
     }
 
     protected void interrupted() {
-    	// figure out swerve controls here
     }
 }
