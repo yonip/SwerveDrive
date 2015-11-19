@@ -63,7 +63,7 @@ public class SwerveModule {
 	 */
 	private static boolean manualRotation;
 	
-	private static final ROTATION_MOTOR_VELOCITY = 10;
+	private static final int ROTATION_MOTOR_VELOCITY = 10;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
