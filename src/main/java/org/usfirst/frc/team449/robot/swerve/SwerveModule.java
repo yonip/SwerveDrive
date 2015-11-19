@@ -62,6 +62,8 @@ public class SwerveModule {
 	 * whether rotation is controlled manually (false for PID)
 	 */
 	private static boolean manualRotation;
+	
+	private static final ROTATION_MOTOR_VELOCITY = 10;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -89,15 +91,28 @@ public class SwerveModule {
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
 	public void rotate(double rotationDegrees) {
-		// TODO: implement
+		
+		lastSetRotation = rotationDegrees;
+		
+		if(isManualRotation()){
+			while(rotationEncoder.getEncoderPosition() > lastSetRotation)
+				rotationMotor.set(-ROTATION_MOTOR_VELOCITY);
+			while(rotationEncoder.getEncoderPosition() < lastSetRotation)
+				rotationMotor.set(ROTATION_MOTOR_VELOCITY);
+		}
+		else{
+			rotationController.setSetpoint(lastSetRotation);
+		}	
 	}
 
 	/**
 	 * sets the velocity of the wheel
-	 * @param speed velocity of the motor
+	 * @param velocity velocity of the motor
 	 */
-	public void set(double speed) {
-		// TODO: implement
+	public void set(double velocity) {
+		lastSetVelocity = velocity;
+		
+		velocityMotor.set(lastSetVelocity);
 	}
 
 	/**
@@ -106,7 +121,8 @@ public class SwerveModule {
 	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
 	 */
 	public void goTo(double speed, double rotationDegrees) {
-		// TODO: implement, maybe rename
+		set(speed);
+		rotate(rotationDegrees);
 	}
 
 	/**
@@ -132,7 +148,10 @@ public class SwerveModule {
 	 */
 	public void setManualVelocity(boolean isOn) {
 		manualVelocity = isOn;
-		if(manualVelocity) velocityController.disable();
+		if(manualVelocity) 
+			velocityController.disable();
+		else
+			velocityController.enable();
 	}
 
 	/**
@@ -142,6 +161,9 @@ public class SwerveModule {
 	 */
 	public void setManualRotation(boolean isOn) {
 		manualRotation = isOn;
-		if(manualRotation) rotationController.disable();
+		if(manualRotation) 
+			rotationController.disable();
+		else
+			rotationController.enable();
 	}
 }//end class
