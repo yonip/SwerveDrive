@@ -38,7 +38,6 @@ public class PIDMotor extends PIDSubsystem {
     // Initialize your subsystem here
     /**
      * initialize the PIDMotor
-     * @param config the OIMap object with all constants
      * @param p		the proportional term
      * @param i		the integral term
      * @param d		the derivative term
@@ -48,7 +47,7 @@ public class PIDMotor extends PIDSubsystem {
      * @param encoder	the encoder that is providing feedback 
      * @param mode		the mode at which the encoder will operate
      */
-    public PIDMotor(OIMap config, double p, double i, double d, double initSet, double tolerance, SpeedController motor, Encoder encoder, int mode) {
+    public PIDMotor(double p, double i, double d, double initSet, double tolerance, SpeedController motor, Encoder encoder, int mode) {
         super(p, i, d);
         
         //initialize the variables
