@@ -33,6 +33,7 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	System.out.println("Robot Init Started");
 		// instantiate the command used for the autonomous period
+        drive.init();
         c.start();
     }
 	

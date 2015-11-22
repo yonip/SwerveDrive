@@ -1,14 +1,12 @@
 package org.usfirst.frc.team449.robot.swerve;
 
-import org.usfirst.frc.team449.robot.OIMap;
+import edu.wpi.first.wpilibj.Gyro;
 import org.usfirst.frc.team449.robot.swerve.commands.DriveSwerveRobot;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team449.robot.swerve.components.MotorCluster;
 
 import java.awt.*;
 
@@ -33,6 +31,11 @@ public class DriveSwerve extends Subsystem {
 	 */
 	private final SwerveModule backRightMotors;
 	/**
+	 * gyro to account for rotation of robot relative to field
+	 * currently assume robot starts at the same direction as the field
+	 */
+	private final Gyro gyro;
+	/**
 	 * the point around which the robot should rotate, relative to the robot
 	 * The point is defined such that (0,0) is the center of the robot, (1,0) is one meter to the right and (0,1) is one meter forward
 	 */
@@ -44,20 +47,30 @@ public class DriveSwerve extends Subsystem {
 	public DriveSwerve(){
 		System.out.println("DriveSwerve init started");
 
-		this.frontLeftMotors = generateModule(SwerveMap.Motors.Velocity.FRONT_LEFT, SwerveMap.Encoders.Velocity.FRONT_LEFT_A,
-				SwerveMap.Encoders.Velocity.FRONT_LEFT_B, SwerveMap.Motors.Rotater.FRONT_LEFT, SwerveMap.Encoders.Rotater.FRONT_LEFT_A,
-				SwerveMap.Encoders.Rotater.FRONT_LEFT_B);
-		this.frontRightMotors = generateModule(SwerveMap.Motors.Velocity.FRONT_RIGHT, SwerveMap.Encoders.Velocity.FRONT_RIGHT_A,
-				SwerveMap.Encoders.Velocity.FRONT_RIGHT_B, SwerveMap.Motors.Rotater.FRONT_RIGHT, SwerveMap.Encoders.Rotater.FRONT_RIGHT_A,
-				SwerveMap.Encoders.Rotater.FRONT_RIGHT_B);
-		this.backLeftMotors = generateModule(SwerveMap.Motors.Velocity.BACK_LEFT, SwerveMap.Encoders.Velocity.BACK_LEFT_A,
-				SwerveMap.Encoders.Velocity.BACK_LEFT_B, SwerveMap.Motors.Rotater.BACK_LEFT, SwerveMap.Encoders.Rotater.BACK_LEFT_A,
-				SwerveMap.Encoders.Rotater.BACK_LEFT_B);
-		this.backRightMotors = generateModule(SwerveMap.Motors.Velocity.BACK_RIGHT, SwerveMap.Encoders.Velocity.BACK_RIGHT_A,
-				SwerveMap.Encoders.Velocity.BACK_RIGHT_B, SwerveMap.Motors.Rotater.BACK_RIGHT, SwerveMap.Encoders.Rotater.BACK_RIGHT_A,
-				SwerveMap.Encoders.Rotater.BACK_RIGHT_B);
+		this.frontLeftMotors = generateModule(SwerveMap.Motors.Linear.FRONT_LEFT, SwerveMap.Encoders.Linear.FRONT_LEFT_A,
+				SwerveMap.Encoders.Linear.FRONT_LEFT_B, SwerveMap.Motors.Angular.FRONT_LEFT, SwerveMap.Encoders.Angular.FRONT_LEFT_A,
+				SwerveMap.Encoders.Angular.FRONT_LEFT_B);
+		this.frontRightMotors = generateModule(SwerveMap.Motors.Linear.FRONT_RIGHT, SwerveMap.Encoders.Linear.FRONT_RIGHT_A,
+				SwerveMap.Encoders.Linear.FRONT_RIGHT_B, SwerveMap.Motors.Angular.FRONT_RIGHT, SwerveMap.Encoders.Angular.FRONT_RIGHT_A,
+				SwerveMap.Encoders.Angular.FRONT_RIGHT_B);
+		this.backLeftMotors = generateModule(SwerveMap.Motors.Linear.BACK_LEFT, SwerveMap.Encoders.Linear.BACK_LEFT_A,
+				SwerveMap.Encoders.Linear.BACK_LEFT_B, SwerveMap.Motors.Angular.BACK_LEFT, SwerveMap.Encoders.Angular.BACK_LEFT_A,
+				SwerveMap.Encoders.Angular.BACK_LEFT_B);
+		this.backRightMotors = generateModule(SwerveMap.Motors.Linear.BACK_RIGHT, SwerveMap.Encoders.Linear.BACK_RIGHT_A,
+				SwerveMap.Encoders.Linear.BACK_RIGHT_B, SwerveMap.Motors.Angular.BACK_RIGHT, SwerveMap.Encoders.Angular.BACK_RIGHT_A,
+				SwerveMap.Encoders.Angular.BACK_RIGHT_B);
+		this.gyro = new Gyro(SwerveMap.Gyros.PORT);
+		this.gyro.reset();
 		System.out.println("DriveSwerve init finished");
 	}//end drive
+
+	/**
+	 * any initialization of the subsystem
+	 * used for resetting gyros, encoders, etc
+	 */
+	public void init() {
+		this.gyro.reset();
+	}
 
 	/**
 	 * sets the heading and rotation of the robot, field centric
@@ -67,7 +80,17 @@ public class DriveSwerve extends Subsystem {
 	 * @param rotationRadians how fast the robot should rotate in radians/second
 	 */
 	public void goTo(double xVelocity, double yVelocity, double rotationRadians) {
-		// TODO account for robot rotation here
+		//get the angle
+		double theta = Math.atan2(yVelocity,xVelocity);
+		//get the velocity
+		double mag = Math.sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
+		//account for angle of robot relative to field
+		theta -= gyro.getAngle();
+		//put that back into components because later calculations are done using components
+		yVelocity = Math.sin(theta)*mag;
+		xVelocity = Math.cos(theta)*mag;
+
+		//now give these values to the modules
 		passTo(frontLeftMotors, -SwerveMap.HALF_WIDTH, SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
 		passTo(frontRightMotors, SwerveMap.HALF_WIDTH, SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
 		passTo(backLeftMotors, -SwerveMap.HALF_WIDTH, -SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
@@ -165,8 +188,8 @@ public class DriveSwerve extends Subsystem {
 		Encoder velEnc = new Encoder(velocityEncoderPortA, velocityEncoderPortB);
 		Encoder rotEnc = new Encoder(rotationEncoderPortA, rotationEncoderPortB);
 
-		velEnc.setDistancePerPulse(SwerveMap.WHEEL_DIAMETER / SwerveMap.Encoders.Velocity.CPR);
-		rotEnc.setDistancePerPulse(1.0 / SwerveMap.Encoders.Rotater.CPR); // because we just want it to go to radians, so distance should equal angle
+		velEnc.setDistancePerPulse(SwerveMap.WHEEL_DIAMETER / SwerveMap.Encoders.Linear.CPR);
+		rotEnc.setDistancePerPulse(1.0 / SwerveMap.Encoders.Angular.CPR); // because we just want it to go to radians, so distance should equal angle
 
 		velEnc.setPIDSourceParameter(PIDSourceParameter.kRate);
 		rotEnc.setPIDSourceParameter(PIDSourceParameter.kRate);
