@@ -5,16 +5,25 @@ package org.usfirst.frc.team449.robot.swerve;
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
+ * TODO Make all of the values real ones
  */
 public class SwerveMap {
 	public static class Motors {
-		public static class Velocity {
+		/**
+		 * a number in volt-seconds per meter (Vs/m) to convert velocity (m/s) to voltage for motors (V)
+		 */
+		public static final double VELOCITY_TO_VOLTAGE = -1;
+		public static class Linear {
 			public static final int FRONT_LEFT = -1;
 			public static final int FRONT_RIGHT = -1;
 			public static final int BACK_LEFT = -1;
 			public static final int BACK_RIGHT = -1;
 		}
-		public static class Rotater {
+		public static class Angular {
+			/**
+			 * the magnitude velocity in rad/sec of the rotation motors when controlled manually
+			 */
+			public static final double DEFAULT_MAX_VELOCITY = -1;
 			public static final int FRONT_LEFT = -1;
 			public static final int FRONT_RIGHT = -1;
 			public static final int BACK_LEFT = -1;
@@ -25,7 +34,7 @@ public class SwerveMap {
 	public static class Encoders {
 
 		/* Motor controller channels. */
-		public static class Velocity {
+		public static class Linear {
 			public static final int CPR = 256;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
@@ -37,7 +46,7 @@ public class SwerveMap {
 			public static final int BACK_RIGHT_B = -1;
 		}
 
-		public static class Rotater {
+		public static class Angular {
 			public static final int CPR = 256;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
@@ -49,6 +58,10 @@ public class SwerveMap {
 			public static final int BACK_RIGHT_B = -1;
 
 		}
+	}
+
+	public static class Gyros {
+		public static final int PORT = -1;
 	}
 
 	/**
@@ -86,14 +99,6 @@ public class SwerveMap {
 	 */
 	public static final boolean DEFAULT_ROTATION_MANUAL = false;
 	/**
-	 * the default linear velocity multiplier for the robot. might have separate levels of speed later on
-	 */
-	public static final double DEFAULT_LINEAR_VELOCITY_FACTOR = -1;
-	/**
-	 * the default angular velocity multiplier for the robot. might have separate levels of speed later on
-	 */
-	public static final double DEFAULT_ANGULAR_VELOCITY_FACTOR = -1;
-	/**
 	 * distance between the center of the robot and each side, in meters
 	 * should also be the magnitude of the "x coordinate" of all the swerve modules
 	 */
@@ -103,4 +108,14 @@ public class SwerveMap {
 	 * should also be the magnitude of the "y coordinate" of all the swerve modules
 	 */
 	public static final double HALF_LENGTH = -1;
+	/**
+	 * factor to convert a value between -1 and 1 a velocity in meters per second
+	 * in practice, this is the default maximum possible linear velocity for the whole robot
+	 */
+	public static final double DEFAULT_MAX_LINEAR_VELOCITY = -1;
+	/**
+	 * factor to convert a value between -1 and 1 a velocity in radians per second
+	 * in practice, this is the default maximum possible angular velocity for the whole robot
+	 */
+	public static final double DEFAULT_MAX_ANGULAR_VELOCITY = -1;
 }
