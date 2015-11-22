@@ -84,6 +84,11 @@ public class SwerveMap {
 	 */
 	public static final double F = 0;
 
+	/**
+	 * PID tolerance
+	 */
+	public static final double TOLERANCE = -1;
+
 	public static final double WHEEL_DIAMETER = 4;
 
 	/**

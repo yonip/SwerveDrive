@@ -2,9 +2,11 @@ package org.usfirst.frc.team449.robot.swerve;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.OIMap;
+import org.usfirst.frc.team449.robot.swerve.components.PIDMotor;
 
 /**
  * A class to control each module of the swerve drive
@@ -40,7 +42,7 @@ public class SwerveModule {
 	/**
 	 * PID controller for this module's wheel's velocity
 	 */
-	private final PIDController velocityController;
+	private final PIDMotor velocityController;
 	/**
 	 * PID controller for this module's wheel's rotatiion
 	 */
@@ -79,7 +81,7 @@ public class SwerveModule {
 		this.rotationMotor = rotationMotor;
 		this.rotationEncoder = rotationEncoder;
 
-		this.velocityController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, velocityEncoder, velocityMotor);
+		this.velocityController = new PIDMotor(SwerveMap.P, SwerveMap.I, SwerveMap.D, 0, SwerveMap.TOLERANCE, velocityMotor ,velocityEncoder, PIDMotor.SPEED_BASE);
 		this.rotationController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, rotationEncoder, rotationMotor);
 
 		this.lastSetVelocity = 0;
@@ -113,7 +115,7 @@ public class SwerveModule {
 		lastSetVelocity = velocity;
 		if(!isManualVelocity())
 			velocityController.setSetpoint(lastSetVelocity);
-		velocityMotor.set(lastSetVelocity);
+		velocityController.setMotorVoltage(lastSetVelocity);
 	}
 
 	/**
