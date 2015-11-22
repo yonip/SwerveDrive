@@ -4,23 +4,13 @@ import org.usfirst.frc.team449.robot.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.swerve.SwerveMap;
 
 /**
  * Autonomous drive command: drive a set distance (move the rotation point a set distance) and
  * rotate the robot around the rotation point by a set angle
  */
 public class AutoDriveSwerve extends Command {
-	
-	/**
-	 * Value that should convert the -1 to 1 range to meters/second
-	 * TODO update this with its real value
-	 */
-	public static final double SCALING_TO_METERS = 1;
-	/**
-	 * Value that should convert the -1 to 1 range to radians/second
-	 * TODO update this with its real value
-	 */
-	public static final double SCALING_TO_RADIANS = 1;
 	
 	/** number between -1 and 1 denoting magnitude of angular velocity (negative is counter-clockwise) */
 	private double angularVel;
@@ -79,8 +69,8 @@ public class AutoDriveSwerve extends Command {
 	 * <code>angularVel</code> to 0 when the robot has rotated the desired amount 
 	 */
 	protected void execute() {
-		distanceTraveled = magnitude * t.get() * SCALING_TO_METERS;
-		amountRotated = angularVel * t.get() * SCALING_TO_RADIANS;
+		distanceTraveled = magnitude * t.get() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
+		amountRotated = angularVel * t.get() * SwerveMap.DEFAULT_MAX_ANGULAR_VELOCITY;
 		
 		if (distanceTraveled >= distance) {
 			magnitude = 0;
