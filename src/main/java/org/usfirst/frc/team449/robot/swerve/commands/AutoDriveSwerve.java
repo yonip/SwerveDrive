@@ -6,89 +6,109 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Autonomous drive command
- *
+ * Autonomous drive command: drive a set distance (move the rotation point a set distance) and
+ * rotate the robot around the rotation point by a set angle
  */
 public class AutoDriveSwerve extends Command {
+	
 	/**
-	 * number between -1 and 1 denoting magnitude of angular velocity (negative is counter-clockwise)
+	 * Value that should convert the -1 to 1 range to meters/second
+	 * TODO update this with its real value
 	 */
-	private double rotation;
+	public static final double SCALING_TO_METERS = 1;
 	/**
-	 * how far the robot should go (meters)
+	 * Value that should convert the -1 to 1 range to radians/second
+	 * TODO update this with its real value
 	 */
+	public static final double SCALING_TO_RADIANS = 1;
+	
+	/** number between -1 and 1 denoting magnitude of angular velocity (negative is counter-clockwise) */
+	private double angularVel;
+	/** how far the robot should go (meters) */
 	private double distance;
-	/**
-	 * where the robt is headed, field centric (rad)
-	 */
+	/** How much the robot should rotate around it's rotation point (radians) */
+	private double rotation;
+	/** where the robot is headed, field centric (radians) */
 	private double heading;
-	/**
-	 * number between -1 and 1 denoting magnitude of velocity vector
-	 */
+	/** number between -1 and 1 denoting magnitude of velocity vector */
 	private double magnitude;
-	/**
-	 * hard time limit for operation (seconds)
-	 */
-	private double time;
+	/** timer to keep track of how long the robot has been driving */
 	private Timer t;
+	
+	/** how far the robot has traveled (meters) */
+	private double distanceTraveled;
+	/** the amount the robot has rotated (radians) */
+	private double amountRotated;
 
 	/**
-	 * move the robot at rotation degrees relative to the driver (0 is forward) until the robot covers the given distance or time time has passed
-	 * emulate the driver giving these inputs
-	 * @param heading angle, in degrees, where the robot should head to, where 0 is forward relative to the driver (converted to radians for storage)
+	 * move the robot towards <code>heading</code> degrees relative to the driver (0 is forward) until the robot
+	 * 		covers the given distance and rotates the given amount around the (moving) rotation point or 
+	 * 		<code>time</code> seconds have passed
+	 * @param heading angle, in degrees, where the robot should head to, where 0 is forward relative to 
+	 * 		the driver (converted to radians for storage)
 	 * @param magnitude number between -1 and 1 denoting magnitude of velocity vector
-	 * @param rotation number between -1 and 1 denoting magnitude of angular velocity (negative is counter-clockwise)
+	 * @param angularVel number between -1 and 1 denoting magnitude of angular velocity (negative 
+	 * 		is counter-clockwise)
 	 * @param distance distance to travel (meters)
-	 * @param time hard time limit
+	 * @param rotation amount to rotate (degrees)
+	 * @param time hard time limit (seconds)
 	 */
-	public AutoDriveSwerve(double heading, double magnitude, double rotation, double distance, double time) {
+	public AutoDriveSwerve(double heading, double magnitude, double angularVel, double distance, double rotation, double time) {
+		super(time);
 		requires(Robot.drive);
-		// conversion to radians
-		this.heading = Math.PI*heading/180.0;
+		this.heading = Math.toRadians(heading);
 		this.magnitude = magnitude;
-		this.rotation = rotation;
+		this.angularVel = angularVel;
 		this.distance = distance;
-		this.time = time;
+		this.rotation = Math.toRadians(rotation);
 		t = new Timer();
-		// might want to turn heading and magnitude to x magnitude and y magnitude. see execute() in DriveSwerveRobot
 	}
 
 	/**
-	 * reset and start timer,
+	 * start driving in given direction at given linear and angular velocity, and start recording how long
+	 * the robot's been driving
 	 */
 	protected void initialize() {
-		// TODO implement
+		Robot.drive.goTo(magnitude * Math.cos(heading), magnitude * Math.sin(heading), angularVel);
+		t.start();
 	}
 
 	/**
-	 * hurr durr I'm really a player, right? (ie pretty much use execute in DriveSwerveRobot)
+	 * update the distance traveled and the amount the robot has rotated since the robot started moving
+	 * Also, set <code>magnitude</code> to 0 when the robot has moved the desired amount and
+	 * <code>angularVel</code> to 0 when the robot has rotated the desired amount 
 	 */
 	protected void execute() {
-		// checklist:
-		// 	x magnitude
-		// 	y magnitude
-		//  rotation magnitude
-		// TODO pass through the values from the joystick calibrated to velocity to the swerve system
+		distanceTraveled = magnitude * t.get() * SCALING_TO_METERS;
+		amountRotated = angularVel * t.get() * SCALING_TO_RADIANS;
+		
+		if (distanceTraveled >= distance) {
+			magnitude = 0;
+		}
+		if (amountRotated >= rotation) {
+			angularVel = 0;
+		}
 	}
 
 	/**
-	 * returns true once you hit your desired setpoint or time was exceeded
+	 * @return true once both <code>magnitude</code> and <code>angularVel</code> are 0, since 
+	 * {@link #execute() execute} will have set them to 0.
 	 */
 	protected boolean isFinished() {
-		// TODO implement
+		return magnitude == 0 && angularVel == 0;
 	}
 
 	/**
-	 * probably stop the robot here
+	 * Set all motors to 0
 	 */
 	protected void end() {
-		// TODO implement
+		Robot.drive.goTo(0, 0, 0);
 	}
 
 	/**
-	 * try setting velocity one last time
+	 * Stop the robot!!! calls {@link #end() end}
 	 */
 	protected void interrupted() {
-		// TODO implement
+		end();
 	}
 }
