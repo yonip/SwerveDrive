@@ -13,7 +13,8 @@ public class MotorCluster extends Subsystem implements SpeedController {
 	/**
 	 * an ArrayList of all the motors in this cluster
 	 */
-	private final ArrayList<SpeedController> controllerList;
+	private final SpeedController[] controllers;
+	private final boolean[] controllerFlags; //add option to invert motor input
 
 	/**
 	 * the previous value that the motors were set to
@@ -22,31 +23,24 @@ public class MotorCluster extends Subsystem implements SpeedController {
 
 	/**
 	 * Constructs a MotorCluster with a single motor
-	 * @param controller the motor to have in the cluster
+	 * @param controllers all the motors for the cluster
+	 * @param flags the invert flags for the motor
 	 */
-	public MotorCluster(SpeedController controller)
+	public MotorCluster(SpeedController[] controllers, boolean[] flags)
 	{
-		this.controllerList = new ArrayList<SpeedController>();
-		this.controllerList.add(controller);
+		this.controllers = controllers;
+		this.controllerFlags = flags;
+
+		if(this.controllers.length != this.controllerFlags.length) {
+			System.out.println("Flags and controllers aren't the same length. ignoring flags.");
+		}
 		
 		this.lastSet = 0;
 	}
 
-	/**
-	 * add a motor that will be considered a part of the cluster
-	 * @param controller the motorController
-	 */
-	public void addSlave(SpeedController controller)
-	{
-		controllerList.add(controller);
-	}
-
 	@Override
 	public void pidWrite(double output) {
-		for(int i=0; i < this.controllerList.size(); i++)
-			controllerList.get(i).set(output);
-		
-		this.lastSet = output;
+		this.set(output);
 	}
 
 	@Override
@@ -61,9 +55,33 @@ public class MotorCluster extends Subsystem implements SpeedController {
 
 	@Override
 	public void set(double speed) {
-	
-		for(int i=0; i < this.controllerList.size(); i++)
-			controllerList.get(i).set(speed);
+
+		if(controllers.length != controllerFlags.length) // if for some reason the invert flag array got screwed up, ignore it
+		{
+			System.err.println("invert flags don't match with slaves");
+			for(int i=0; i < controllers.length; i++)
+			{
+				//System.out.println("PID setting throttle " + output);
+				controllers[i].set(speed);
+			}
+
+			return;
+		}
+		else // invert flags and slave lists all bueno
+		{
+			for(int i=0; i < controllers.length; i++)
+			{
+				//System.out.println("setting throttle " + output);
+				if(controllerFlags[i]) // if invert flag, invert slave motor output
+				{
+					controllers[i].set(-speed);
+				}
+				else // if slave is not to be inverted
+				{
+					controllers[i].set(speed);
+				}
+			}
+		}
 		
 		this.lastSet = speed;
 	}
@@ -71,8 +89,8 @@ public class MotorCluster extends Subsystem implements SpeedController {
 	@Override
 	public void disable() {
 		
-		for(int i=0; i < this.controllerList.size(); i++)
-			controllerList.get(i).disable();
+		for(int i=0; i < this.controllers.length; i++)
+			controllers[i].disable();
 	}
 
 	@Override
