@@ -104,7 +104,7 @@ public class PIDMotor extends PIDSubsystem {
      * added: ability to output slaves and also invert slave outputs
      */
     protected void usePIDOutput(double output) {
-        motor.set(output);
+        motor.pidWrite(output);
     }
     
     /**
