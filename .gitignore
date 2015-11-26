@@ -85,3 +85,13 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# IntelliJ, Gradle, GradleRIO
+build.gradle
+gradlew*
+settings.gradle
+*.iml
+*.ipr
+*.iws
+Credits.txt
+GradleRIO4Dummies.txt
