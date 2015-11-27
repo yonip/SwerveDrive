@@ -53,7 +53,7 @@ public class SwerveModule {
 	 */
 	private double lastSetVelocity;
 	/**
-	 * the previous value the rotation was set to
+	 * the previous value the rotation was set to, in radians
 	 */
 	private double lastSetRotation;
 	/**
@@ -64,15 +64,13 @@ public class SwerveModule {
 	 * whether rotation is controlled manually (false for PID)
 	 */
 	private static boolean manualRotation;
-	
-	private static final int ROTATION_MOTOR_VELOCITY = 10;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
 	 * @param velocityMotor the motor to control the velocity of this module's wheel
 	 * @param velocityEncoder the encoder for the motor controlling the velocity of this module's wheel
 	 * @param rotationMotor the motor to control the rotation of this module's wheel
-	 * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel
+	 * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel, with dpp set to radians
 	 */
 	public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, boolean isManualVelocity, SpeedController rotationMotor, Encoder rotationEncoder, boolean isManualRotation)
 	{
@@ -84,23 +82,36 @@ public class SwerveModule {
 		this.velocityController = new PIDMotor(SwerveMap.P, SwerveMap.I, SwerveMap.D, 0, SwerveMap.TOLERANCE, velocityMotor ,velocityEncoder, PIDMotor.SPEED_BASE);
 		this.rotationController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, rotationEncoder, rotationMotor);
 
+		this.setManualVelocity(isManualVelocity);
+		this.setManualRotation(isManualRotation);
+
 		this.lastSetVelocity = 0;
 		this.lastSetRotation = 0;
 	}
 
 	/**
-	 * sets the rotation of the wheel
-	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
+	 * resets the encoders
+	 * theoretically to be used in the subsystem init
+	 * only problem being rotation of the wheel may not be 0 on init
 	 */
-	public void rotate(double rotationDegrees) {
+	public void reset() {
+		this.velocityEncoder.reset();
+		this.rotationEncoder.reset();
+	}
+
+	/**
+	 * sets the rotation of the wheel
+	 * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
+	 */
+	public void rotate(double rotationRadians) {
 		
-		lastSetRotation = rotationDegrees;
+		lastSetRotation = rotationRadians;
 		
 		if(isManualRotation()){
 			while(rotationEncoder.get() > lastSetRotation)
-				rotationMotor.set(-ROTATION_MOTOR_VELOCITY);
+				rotationMotor.set(-SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
 			while(rotationEncoder.get() < lastSetRotation)
-				rotationMotor.set(ROTATION_MOTOR_VELOCITY);
+				rotationMotor.set(SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
 		}
 		else{
 			rotationController.setSetpoint(lastSetRotation);
@@ -121,11 +132,11 @@ public class SwerveModule {
 	/**
 	 * sets the heading of the module, robot centric
 	 * @param speed velocity of the wheel
-	 * @param rotationDegrees rotation in degrees where 0 points the wheel to the robot's front
+	 * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
 	 */
-	public void goTo(double speed, double rotationDegrees) {
+	public void goTo(double speed, double rotationRadians) {
 		set(speed);
-		rotate(rotationDegrees);
+		rotate(rotationRadians);
 	}
 
 	/**
@@ -168,5 +179,45 @@ public class SwerveModule {
 			rotationController.disable();
 		else
 			rotationController.enable();
+	}
+
+	/**
+	 * get the velocity this module was set to last
+	 * no guarantee that the motor is running at this velocity
+	 * @return a double in m/s that is the last velocity this module was set to
+	 * @see #set(double)
+	 * @see #goTo(double, double)
+	 * @see #getVelocityRate()
+	 */
+	public double getLastSetVelocity() {
+		return lastSetVelocity;
+	}
+
+	/**
+	 * get the rotation this module was set to last, in radians
+	 * no guarantee that the motor is at this rotation
+	 * @return a double between -PI and PI that is the last rotation this module was set to
+	 * @see #rotate(double)
+	 * @see #goTo(double, double)
+	 */
+	public double getLastSetRotation() {
+		return lastSetRotation;
+	}
+
+	/**
+	 * gets the linear velocity of the wheel attached to the velocity encoder, using the encoder getRate() method
+	 * @return a double representing the linear velocity of the wheel, in m/s
+	 */
+	public double getVelocityRate() {
+		return this.velocityEncoder.getRate();
+	}
+
+	/**
+	 * gets the current angle in radians as read from the encoder
+	 * uses the modulu (%) operation to wrap around
+	 * @return a value between -PI and PI, representing the current wheel's rotation
+	 */
+	public double getAngle() {
+		return rotationEncoder.getDistance()%Math.PI;
 	}
 }//end class
