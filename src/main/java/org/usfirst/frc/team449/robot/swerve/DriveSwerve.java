@@ -70,6 +70,10 @@ public class DriveSwerve extends Subsystem {
 	 */
 	public void init() {
 		this.gyro.reset();
+		this.frontLeftMotors.reset();
+		this.frontRightMotors.reset();
+		this.backLeftMotors.reset();
+		this.backRightMotors.reset();
 	}
 
 	/**
