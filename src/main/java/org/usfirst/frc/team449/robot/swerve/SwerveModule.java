@@ -59,11 +59,11 @@ public class SwerveModule {
 	/**
 	 * whether the velocity is controlled manually (false for PID)
 	 */
-	private static boolean manualVelocity;
+	private boolean manualVelocity;
 	/**
 	 * whether rotation is controlled manually (false for PID)
 	 */
-	private static boolean manualRotation;
+	private boolean manualRotation;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
@@ -143,7 +143,7 @@ public class SwerveModule {
 	 * whether the velocity is controlled manually (PID otherwise)
 	 * @return true if velocity of all modules is controlled manually, and false otherwise
 	 */
-	public static boolean isManualVelocity() {
+	public boolean isManualVelocity() {
 		return manualVelocity;
 	}
 
@@ -151,7 +151,7 @@ public class SwerveModule {
 	 * whether the rotation is controlled manually (PID otherwise)
 	 * @return true if rotation of all modules is controlled manually, and false otherwise
 	 */
-	public static boolean isManualRotation() {
+	public boolean isManualRotation() {
 		return manualRotation;
 	}
 

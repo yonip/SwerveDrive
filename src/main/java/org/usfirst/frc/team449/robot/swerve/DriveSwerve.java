@@ -40,6 +40,16 @@ public class DriveSwerve extends Subsystem {
 	 * The point is defined such that (0,0) is the center of the robot, (1,0) is one meter to the right and (0,1) is one meter forward
 	 */
 	private Point rotationPoint;
+	/**
+	 * the last state the modules were set to for velocity
+	 * true for manual, false for PID
+	 */
+	private boolean lastManualVelocity;
+	/**
+	 * the last state the modules were set to for rotation
+	 * true for manual, false for PID
+	 */
+	private boolean lastManualRotation;
 	
 	/**
 	 * Initialize the DriveSwerve subsystem
@@ -59,6 +69,10 @@ public class DriveSwerve extends Subsystem {
 		this.backRightMotors = generateModule(SwerveMap.Motors.Linear.BACK_RIGHT, SwerveMap.Encoders.Linear.BACK_RIGHT_A,
 				SwerveMap.Encoders.Linear.BACK_RIGHT_B, SwerveMap.Motors.Angular.BACK_RIGHT, SwerveMap.Encoders.Angular.BACK_RIGHT_A,
 				SwerveMap.Encoders.Angular.BACK_RIGHT_B);
+
+		this.lastManualVelocity = SwerveMap.DEFAULT_VELOCITY_MANUAL;
+		this.lastManualRotation = SwerveMap.DEFAULT_ROTATION_MANUAL;
+
 		this.gyro = new Gyro(SwerveMap.Gyros.PORT);
 		this.gyro.reset();
 		System.out.println("DriveSwerve init finished");
@@ -146,6 +160,7 @@ public class DriveSwerve extends Subsystem {
 		frontRightMotors.setManualVelocity(isOn);
 		backLeftMotors.setManualVelocity(isOn);
 		backRightMotors.setManualVelocity(isOn);
+		this.lastManualVelocity = isOn;
     }
 
 	/**
@@ -157,6 +172,7 @@ public class DriveSwerve extends Subsystem {
 		frontRightMotors.setManualRotation(isOn);
 		backLeftMotors.setManualRotation(isOn);
 		backRightMotors.setManualRotation(isOn);
+		this.lastManualRotation = isOn;
 	}
 
 	/**
@@ -165,7 +181,12 @@ public class DriveSwerve extends Subsystem {
 	 */
 	public boolean isManualVelocity()
 	{
-		return SwerveModule.isManualVelocity();
+		boolean and = frontRightMotors.isManualVelocity() && frontLeftMotors.isManualVelocity() && backRightMotors.isManualVelocity() && backLeftMotors.isManualVelocity();
+		boolean or = frontRightMotors.isManualVelocity() || frontLeftMotors.isManualVelocity() || backRightMotors.isManualVelocity() || backLeftMotors.isManualVelocity();
+		if(and != or) {
+			System.err.println("Manual values for velocity don't correspond! Saying " + this.lastManualVelocity + " anyway");
+		}
+		return this.lastManualVelocity;
 	}
 
 	/**
@@ -174,7 +195,12 @@ public class DriveSwerve extends Subsystem {
 	 */
 	public boolean isManualRotation()
 	{
-		return SwerveModule.isManualRotation();
+		boolean and = frontRightMotors.isManualRotation() && frontLeftMotors.isManualRotation() && backRightMotors.isManualRotation() && backLeftMotors.isManualRotation();
+		boolean or = frontRightMotors.isManualRotation() || frontLeftMotors.isManualRotation() || backRightMotors.isManualRotation() || backLeftMotors.isManualRotation();
+		if(and != or) {
+			System.err.println("Manual values for rotation don't correspond! Saying " + this.lastManualRotation + " anyway");
+		}
+		return this.lastManualRotation;
 	}
 
 	/**
