@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot;
 
-import org.usfirst.frc.team449.robot.subsystems.DriveSwerve;
+import org.usfirst.frc.team449.robot.swerve.DriveSwerve;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -33,6 +33,7 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	System.out.println("Robot Init Started");
 		// instantiate the command used for the autonomous period
+        drive.init();
         c.start();
     }
 	

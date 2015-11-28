@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 	public final Joystick driveSwerveJoystick;
+	public final Joystick driveSwerveRotationJoystick;
 
 	public OI() {
 		System.out.println("OI init started");
-		driveSwerveJoystick = new Joystick(RobotMap.DRIVE_SWERVE_JOYSTICK);
+		driveSwerveJoystick = new Joystick(OIMap.DRIVE_SWERVE_JOYSTICK);
+		driveSwerveRotationJoystick = new Joystick(OIMap.DRIVE_SWERVE_ROTATION_JOYSTICK);
 
 		System.out.println("OI init ended");
 	}
@@ -34,12 +36,12 @@ public class OI {
 	}
 
 	/**
-	 * gets the yaw value from the swerve joystick (also z axis rotation, twist or yaw)
+	 * gets the rotation value from the rotation joystick (also z axis, twist or yaw)
 	 * positive is
 	 * @return value from -1 to 1
 	 */
 	public double getSwerveStickTheta() {
-		return getJoystickAxisZ(driveSwerveJoystick);
+		return getJoystickAxisZ(driveSwerveRotationJoystick);
 	}
 
 	/**
