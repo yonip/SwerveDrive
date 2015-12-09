@@ -108,9 +108,9 @@ public class SwerveModule {
 		lastSetRotation = rotationRadians;
 		
 		if(isManualRotation()){
-			while(rotationEncoder.get() > lastSetRotation)
+			while(this.getAngle() > lastSetRotation)
 				rotationMotor.set(-SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
-			while(rotationEncoder.get() < lastSetRotation)
+			while(this.getAngle() < lastSetRotation)
 				rotationMotor.set(SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
 		}
 		else{
@@ -124,9 +124,9 @@ public class SwerveModule {
 	 */
 	public void set(double velocity) {
 		lastSetVelocity = velocity;
-		if(!isManualVelocity())
-			velocityController.setSetpoint(lastSetVelocity);
-		velocityController.setMotorVoltage(lastSetVelocity);
+		if(isManualVelocity())
+			velocityController.setMotorVoltage(lastSetVelocity);
+		velocityController.setSetpoint(lastSetVelocity);
 	}
 
 	/**
