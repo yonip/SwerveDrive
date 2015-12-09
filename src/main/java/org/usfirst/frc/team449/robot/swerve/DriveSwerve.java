@@ -1,6 +1,8 @@
 package org.usfirst.frc.team449.robot.swerve;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.SerialPort;
 import org.usfirst.frc.team449.robot.swerve.commands.DriveSwerveRobot;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,7 +36,7 @@ public class DriveSwerve extends Subsystem {
 	 * gyro to account for rotation of robot relative to field
 	 * currently assume robot starts at the same direction as the field
 	 */
-	private final Gyro gyro;
+	private final AHRS gyro;
 	/**
 	 * the point around which the robot should rotate, relative to the robot
 	 * The point is defined such that (0,0) is the center of the robot, (1,0) is one meter to the right and (0,1) is one meter forward
@@ -73,7 +75,7 @@ public class DriveSwerve extends Subsystem {
 		this.lastManualVelocity = SwerveMap.DEFAULT_VELOCITY_MANUAL;
 		this.lastManualRotation = SwerveMap.DEFAULT_ROTATION_MANUAL;
 
-		this.gyro = new Gyro(SwerveMap.Gyros.PORT);
+		this.gyro = new AHRS(SerialPort.Port.kMXP);
 		this.gyro.reset();
 		System.out.println("DriveSwerve init finished");
 	}//end drive
