@@ -126,7 +126,8 @@ public class SwerveModule {
 		lastSetVelocity = velocity;
 		if(isManualVelocity())
 			velocityController.setMotorVoltage(lastSetVelocity);
-		velocityController.setSetpoint(lastSetVelocity);
+		else
+			velocityController.setSetpoint(lastSetVelocity);
 	}
 
 	/**
