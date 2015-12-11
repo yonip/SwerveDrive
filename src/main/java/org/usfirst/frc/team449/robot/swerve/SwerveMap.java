@@ -35,7 +35,7 @@ public class SwerveMap {
 
 		/* Motor controller channels. */
 		public static class Linear {
-			public static final int CPR = 256;
+			public static final int CPR = -1;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
 			public static final int FRONT_RIGHT_A = -1;
@@ -47,7 +47,7 @@ public class SwerveMap {
 		}
 
 		public static class Angular {
-			public static final int CPR = 256;
+			public static final int CPR = -1;
 			public static final int FRONT_LEFT_A = -1;
 			public static final int FRONT_LEFT_B = -1;
 			public static final int FRONT_RIGHT_A = -1;
@@ -58,10 +58,6 @@ public class SwerveMap {
 			public static final int BACK_RIGHT_B = -1;
 
 		}
-	}
-
-	public static class Gyros {
-		public static final int PORT = -1;
 	}
 
 	/**

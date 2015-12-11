@@ -105,7 +105,7 @@ public class DriveSwerve extends Subsystem {
 		//get the velocity
 		double mag = Math.sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
 		//account for angle of robot relative to field
-		theta -= gyro.getAngle();
+		theta -= this.getAngle();
 		//put that back into components because later calculations are done using components
 		yVelocity = Math.sin(theta)*mag;
 		xVelocity = Math.cos(theta)*mag;
@@ -203,6 +203,15 @@ public class DriveSwerve extends Subsystem {
 			System.err.println("Manual values for rotation don't correspond! Saying " + this.lastManualRotation + " anyway");
 		}
 		return this.lastManualRotation;
+	}
+
+	/**
+	 * gets the current angle of the whole robot in radians relative to where the gyro was last reset (likely initial position)
+	 * uses the modulo (%) operation to wrap around and keep sign
+	 * @return a value between -PI and PI, representing the current wheel's rotation
+	 */
+	public double getAngle() {
+		return this.gyro.getAngle() % Math.PI;
 	}
 
 	/**
