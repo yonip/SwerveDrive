@@ -214,7 +214,7 @@ public class SwerveModule {
 
 	/**
 	 * gets the current angle in radians as read from the encoder
-	 * uses the modulu (%) operation to wrap around
+	 * uses the modulo (%) operation to wrap around
 	 * @return a value between -PI and PI, representing the current wheel's rotation
 	 */
 	public double getAngle() {
