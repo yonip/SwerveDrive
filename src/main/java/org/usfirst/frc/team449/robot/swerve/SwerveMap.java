@@ -9,10 +9,6 @@ package org.usfirst.frc.team449.robot.swerve;
  */
 public class SwerveMap {
 	public static class Motors {
-		/**
-		 * a number in volt-seconds per meter (Vs/m) to convert velocity (m/s) to voltage for motors (V)
-		 */
-		public static final double VELOCITY_TO_VOLTAGE = -1;
 		public static class Linear {
 			public static final int FRONT_LEFT = -1;
 			public static final int FRONT_RIGHT = -1;
@@ -21,7 +17,7 @@ public class SwerveMap {
 		}
 		public static class Angular {
 			/**
-			 * the magnitude velocity in rad/sec of the rotation motors when controlled manually
+			 * the maximum velocity in rad/sec of the rotation motors when controlled manually
 			 */
 			public static final double DEFAULT_MAX_VELOCITY = -1;
 			public static final int FRONT_LEFT = -1;
