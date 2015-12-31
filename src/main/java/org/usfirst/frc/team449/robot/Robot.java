@@ -17,11 +17,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 	
-	public static final DriveSwerve drive		= new DriveSwerve();
+	public static final DriveSwerve drive = new DriveSwerve();
 
-	public static final OI 			OI 			= new OI();
-	
-	public static final Compressor c = new Compressor();
+	public static final OI oi = new OI();
 	
 	
 	Command autonomousCommand;
@@ -32,9 +30,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	System.out.println("Robot Init Started");
-		// instantiate the command used for the autonomous period
         drive.init();
-        c.start();
     }
 	
 	public void disabledPeriodic() {
