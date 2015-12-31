@@ -41,14 +41,9 @@ public class OI {
 	 * @return value from -1 to 1
 	 */
 	public double getSwerveStickTheta() {
-		return getJoystickAxisZ(driveSwerveRotationJoystick);
+		return getJoystickAxisX(driveSwerveRotationJoystick);
 	}
 
-	/**
-	 * 
-	 * @param joystick
-	 * @return
-	 */
 	public double getJoystickAxisX(Joystick joystick)
 	{
 		return joystick.getAxis(Joystick.AxisType.kX);
@@ -70,5 +65,5 @@ public class OI {
 	}
 	
 	
-}//end class
+}
 
