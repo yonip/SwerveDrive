@@ -59,7 +59,6 @@ public class AutoDriveSwerve extends Command {
 	 * the robot's been driving
 	 */
 	protected void initialize() {
-		Robot.drive.goTo(magnitude * Math.cos(heading), magnitude * Math.sin(heading), angularVel);
 		t.start();
 	}
 
@@ -69,6 +68,8 @@ public class AutoDriveSwerve extends Command {
 	 * <code>angularVel</code> to 0 when the robot has rotated the desired amount 
 	 */
 	protected void execute() {
+		Robot.drive.goTo(magnitude, heading, angularVel);
+		
 		distanceTraveled = magnitude * t.get() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
 		amountRotated = angularVel * t.get() * SwerveMap.DEFAULT_MAX_ANGULAR_VELOCITY;
 		
@@ -85,7 +86,7 @@ public class AutoDriveSwerve extends Command {
 	 * {@link #execute() execute} will have set them to 0.
 	 */
 	protected boolean isFinished() {
-		return magnitude == 0 && angularVel == 0;
+		return distanceTraveled >= distance && amountRotated >= rotation;
 	}
 
 	/**
