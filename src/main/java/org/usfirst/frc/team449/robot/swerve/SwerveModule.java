@@ -21,56 +21,38 @@ import org.usfirst.frc.team449.robot.swerve.components.PIDMotor;
  */
 public class SwerveModule {
 
-	/**
-	 * the motor to control the velocity of this module's wheel
-	 */
+	/** the motor to control the velocity of this module's wheel */
 	private final SpeedController velocityMotor;
-	/**
-	 * the motor to control the rotation of this module's wheel
-	 */
+	/** the motor to control the rotation of this module's wheel */
 	private final SpeedController rotationMotor;
 
-	/**
-	 * the encoder for the motor controlling the velocity of this module's wheel
-	 */
+	/** the encoder for the motor controlling the velocity of this module's wheel */
 	private final Encoder velocityEncoder;
-	/**
-	 * the encoder for the motor controlling the rotation of this module's wheel
-	 */
+	/** the encoder for the motor controlling the rotation of this module's wheel */
 	private final Encoder rotationEncoder;
 
-	/**
-	 * PID controller for this module's wheel's velocity
-	 */
+	/** PID controller for this module's wheel's velocity */
 	private final PIDMotor velocityController;
-	/**
-	 * PID controller for this module's wheel's rotatiion
-	 */
+	/** PID controller for this module's wheel's rotatiion */
 	private final PIDController rotationController;
 
-	/**
-	 * the previous value the velocity was set to
-	 */
+	/** the previous value the velocity was set to */
 	private double lastSetVelocity;
-	/**
-	 * the previous value the rotation was set to, in radians
-	 */
+	/** the previous value the rotation was set to, in radians */
 	private double lastSetRotation;
-	/**
-	 * whether the velocity is controlled manually (false for PID)
-	 */
+	/** whether the velocity is controlled manually (false for PID) */
 	private boolean manualVelocity;
-	/**
-	 * whether rotation is controlled manually (false for PID)
-	 */
+	/** whether rotation is controlled manually (false for PID) */
 	private boolean manualRotation;
 
 	/**
 	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
 	 * @param velocityMotor the motor to control the velocity of this module's wheel
 	 * @param velocityEncoder the encoder for the motor controlling the velocity of this module's wheel
+	 * @param isManualVelocity whether the velocity is being set manually
 	 * @param rotationMotor the motor to control the rotation of this module's wheel
 	 * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel, with dpp set to radians
+	 * @param isManualRotation whether the rotational velocity is being set manually
 	 */
 	public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, boolean isManualVelocity, SpeedController rotationMotor, Encoder rotationEncoder, boolean isManualRotation)
 	{
@@ -221,4 +203,4 @@ public class SwerveModule {
 	public double getAngle() {
 		return rotationEncoder.getDistance()%Math.PI;
 	}
-}//end class
+}
