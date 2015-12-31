@@ -19,11 +19,14 @@ public class DriveSwerveRobot extends Command {
 
     protected void execute() {
     	//Set values to the values given by the joysticks, converted to velocities
-        double x = Robot.OI.getSwerveStickX() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
-        double y = Robot.OI.getSwerveStickY() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
-        double theta = Robot.OI.getSwerveStickTheta(); 
+        double x = Robot.oi.getSwerveStickX() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
+        double y = Robot.oi.getSwerveStickY() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
+        double omega = Robot.oi.getSwerveStickTheta();
 
-        Robot.drive.goTo(x, y, theta);
+        double magnitude = Math.sqrt(x*x+y*y);
+        double theta = Math.atan2(y,x);
+
+        Robot.drive.goTo(magnitude, theta, omega);
     }
 
     protected boolean isFinished() {
@@ -35,6 +38,5 @@ public class DriveSwerveRobot extends Command {
     }
 
     protected void interrupted() {
-    	// TODO pretty much just execute one more time, probably
     }
 }

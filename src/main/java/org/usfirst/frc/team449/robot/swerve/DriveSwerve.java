@@ -95,20 +95,16 @@ public class DriveSwerve extends Subsystem {
 	/**
 	 * sets the heading and rotation of the robot, field centric
 	 * rotation will be around an arbitrary point stored in this class (rotationPoint)
-	 * @param xVelocity the x component of the vector for the robot to move in
-	 * @param yVelocity the y component of the vector for the robot to move in
+	 * @param magnitude the magnitude of the vector for the robot to move in
+	 * @param angleRadians the angle of the vector for the robot to move in (radians)
 	 * @param rotationRadians how fast the robot should rotate in radians/second
 	 */
-	public void goTo(double xVelocity, double yVelocity, double rotationRadians) {
-		//get the angle
-		double theta = Math.atan2(yVelocity,xVelocity);
-		//get the velocity
-		double mag = Math.sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
+	public void goTo(double magnitude, double angleRadians, double rotationRadians) {
 		//account for angle of robot relative to field
-		theta -= this.getAngle();
+		double theta = angleRadians - this.getAngle();
 		//put that back into components because later calculations are done using components
-		yVelocity = Math.sin(theta)*mag;
-		xVelocity = Math.cos(theta)*mag;
+		double yVelocity = Math.sin(theta)*magnitude;
+		double xVelocity = Math.cos(theta)*magnitude;
 
 		//now give these values to the modules
 		passTo(frontLeftMotors, -SwerveMap.HALF_WIDTH, SwerveMap.HALF_LENGTH, xVelocity, yVelocity, rotationRadians, rotationPoint);
