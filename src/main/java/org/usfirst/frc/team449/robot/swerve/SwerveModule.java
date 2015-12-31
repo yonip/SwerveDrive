@@ -21,186 +21,186 @@ import org.usfirst.frc.team449.robot.swerve.components.PIDMotor;
  */
 public class SwerveModule {
 
-	/** the motor to control the velocity of this module's wheel */
-	private final SpeedController velocityMotor;
-	/** the motor to control the rotation of this module's wheel */
-	private final SpeedController rotationMotor;
+    /** the motor to control the velocity of this module's wheel */
+    private final SpeedController velocityMotor;
+    /** the motor to control the rotation of this module's wheel */
+    private final SpeedController rotationMotor;
 
-	/** the encoder for the motor controlling the velocity of this module's wheel */
-	private final Encoder velocityEncoder;
-	/** the encoder for the motor controlling the rotation of this module's wheel */
-	private final Encoder rotationEncoder;
+    /** the encoder for the motor controlling the velocity of this module's wheel */
+    private final Encoder velocityEncoder;
+    /** the encoder for the motor controlling the rotation of this module's wheel */
+    private final Encoder rotationEncoder;
 
-	/** PID controller for this module's wheel's velocity */
-	private final PIDMotor velocityController;
-	/** PID controller for this module's wheel's rotatiion */
-	private final PIDController rotationController;
+    /** PID controller for this module's wheel's velocity */
+    private final PIDMotor velocityController;
+    /** PID controller for this module's wheel's rotatiion */
+    private final PIDController rotationController;
 
-	/** the previous value the velocity was set to */
-	private double lastSetVelocity;
-	/** the previous value the rotation was set to, in radians */
-	private double lastSetRotation;
-	/** whether the velocity is controlled manually (false for PID) */
-	private boolean manualVelocity;
-	/** whether rotation is controlled manually (false for PID) */
-	private boolean manualRotation;
+    /** the previous value the velocity was set to */
+    private double lastSetVelocity;
+    /** the previous value the rotation was set to, in radians */
+    private double lastSetRotation;
+    /** whether the velocity is controlled manually (false for PID) */
+    private boolean manualVelocity;
+    /** whether rotation is controlled manually (false for PID) */
+    private boolean manualRotation;
 
-	/**
-	 * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
-	 * @param velocityMotor the motor to control the velocity of this module's wheel
-	 * @param velocityEncoder the encoder for the motor controlling the velocity of this module's wheel
-	 * @param isManualVelocity whether the velocity is being set manually
-	 * @param rotationMotor the motor to control the rotation of this module's wheel
-	 * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel, with dpp set to radians
-	 * @param isManualRotation whether the rotational velocity is being set manually
-	 */
-	public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, boolean isManualVelocity, SpeedController rotationMotor, Encoder rotationEncoder, boolean isManualRotation)
-	{
-		this.velocityMotor = velocityMotor;
-		this.velocityEncoder = velocityEncoder;
-		this.rotationMotor = rotationMotor;
-		this.rotationEncoder = rotationEncoder;
+    /**
+     * Constructs a module with the motors and encoders of this module, and internally creates PID controllers for rotation and velocity
+     * @param velocityMotor the motor to control the velocity of this module's wheel
+     * @param velocityEncoder the encoder for the motor controlling the velocity of this module's wheel
+     * @param isManualVelocity whether the velocity is being set manually
+     * @param rotationMotor the motor to control the rotation of this module's wheel
+     * @param rotationEncoder the encoder for the motor controlling the rotation of this module's wheel, with dpp set to radians
+     * @param isManualRotation whether the rotational velocity is being set manually
+     */
+    public SwerveModule(SpeedController velocityMotor, Encoder velocityEncoder, boolean isManualVelocity, SpeedController rotationMotor, Encoder rotationEncoder, boolean isManualRotation)
+    {
+        this.velocityMotor = velocityMotor;
+        this.velocityEncoder = velocityEncoder;
+        this.rotationMotor = rotationMotor;
+        this.rotationEncoder = rotationEncoder;
 
-		this.velocityController = new PIDMotor(SwerveMap.P, SwerveMap.I, SwerveMap.D, 0, SwerveMap.TOLERANCE, velocityMotor ,velocityEncoder, PIDMotor.SPEED_BASE);
-		this.rotationController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, rotationEncoder, rotationMotor);
+        this.velocityController = new PIDMotor(SwerveMap.P, SwerveMap.I, SwerveMap.D, 0, SwerveMap.TOLERANCE, velocityMotor ,velocityEncoder, PIDMotor.SPEED_BASE);
+        this.rotationController = new PIDController(SwerveMap.P, SwerveMap.I, SwerveMap.D, SwerveMap.F, rotationEncoder, rotationMotor);
 
-		this.setManualVelocity(isManualVelocity);
-		this.setManualRotation(isManualRotation);
+        this.setManualVelocity(isManualVelocity);
+        this.setManualRotation(isManualRotation);
 
-		this.lastSetVelocity = 0;
-		this.lastSetRotation = 0;
-	}
+        this.lastSetVelocity = 0;
+        this.lastSetRotation = 0;
+    }
 
-	/**
-	 * resets the encoders
-	 * theoretically to be used in the subsystem init
-	 * only problem being rotation of the wheel may not be 0 on init
-	 */
-	public void reset() {
-		this.velocityEncoder.reset();
-		this.rotationEncoder.reset();
-	}
+    /**
+     * resets the encoders
+     * theoretically to be used in the subsystem init
+     * only problem being rotation of the wheel may not be 0 on init
+     */
+    public void reset() {
+        this.velocityEncoder.reset();
+        this.rotationEncoder.reset();
+    }
 
-	/**
-	 * sets the rotation of the wheel
-	 * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
-	 */
-	public void rotate(double rotationRadians) {
-		
-		lastSetRotation = rotationRadians;
-		
-		if(isManualRotation()){
-			while(this.getAngle() > lastSetRotation)
-				rotationMotor.set(-SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
-			while(this.getAngle() < lastSetRotation)
-				rotationMotor.set(SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
-		}
-		else{
-			rotationController.setSetpoint(lastSetRotation);
-		}	
-	}
+    /**
+     * sets the rotation of the wheel
+     * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
+     */
+    public void rotate(double rotationRadians) {
 
-	/**
-	 * sets the velocity of the wheel
-	 * @param velocity velocity of the motor
-	 */
-	public void set(double velocity) {
-		lastSetVelocity = velocity;
-		if(isManualVelocity())
-			velocityController.setMotorVoltage(lastSetVelocity);
-		else
-			velocityController.setSetpoint(lastSetVelocity);
-	}
+        lastSetRotation = rotationRadians;
 
-	/**
-	 * sets the heading of the module, robot centric
-	 * @param speed velocity of the wheel
-	 * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
-	 */
-	public void goTo(double speed, double rotationRadians) {
-		set(speed);
-		rotate(rotationRadians);
-	}
+        if(isManualRotation()){
+            while(this.getAngle() > lastSetRotation)
+                rotationMotor.set(-SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
+            while(this.getAngle() < lastSetRotation)
+                rotationMotor.set(SwerveMap.Motors.Angular.DEFAULT_MAX_VELOCITY);
+        }
+        else{
+            rotationController.setSetpoint(lastSetRotation);
+        }
+    }
 
-	/**
-	 * whether the velocity is controlled manually (PID otherwise)
-	 * @return true if velocity of all modules is controlled manually, and false otherwise
-	 */
-	public boolean isManualVelocity() {
-		return manualVelocity;
-	}
+    /**
+     * sets the velocity of the wheel
+     * @param velocity velocity of the motor
+     */
+    public void set(double velocity) {
+        lastSetVelocity = velocity;
+        if(isManualVelocity())
+            velocityController.setMotorVoltage(lastSetVelocity);
+        else
+            velocityController.setSetpoint(lastSetVelocity);
+    }
 
-	/**
-	 * whether the rotation is controlled manually (PID otherwise)
-	 * @return true if rotation of all modules is controlled manually, and false otherwise
-	 */
-	public boolean isManualRotation() {
-		return manualRotation;
-	}
+    /**
+     * sets the heading of the module, robot centric
+     * @param speed velocity of the wheel
+     * @param rotationRadians rotation in degrees where 0 points the wheel to the robot's front
+     */
+    public void goTo(double speed, double rotationRadians) {
+        set(speed);
+        rotate(rotationRadians);
+    }
 
-	/**
-	 * whether the velocity should be controlled manually (PID otherwise)
-	 * enables or disables the PID controller accordingly
-	 * @param isOn true if velocity of all modules should be controlled manually, and false otherwise
-	 */
-	public void setManualVelocity(boolean isOn) {
-		manualVelocity = isOn;
-		if(manualVelocity) 
-			velocityController.disable();
-		else
-			velocityController.enable();
-	}
+    /**
+     * whether the velocity is controlled manually (PID otherwise)
+     * @return true if velocity of all modules is controlled manually, and false otherwise
+     */
+    public boolean isManualVelocity() {
+        return manualVelocity;
+    }
 
-	/**
-	 * whether the rotation should be controlled manually (PID otherwise)
-	 * enables or disables the PID controller accordingly
-	 * @param isOn true if rotation of all modules should be controlled manually, and false otherwise
-	 */
-	public void setManualRotation(boolean isOn) {
-		manualRotation = isOn;
-		if(manualRotation) 
-			rotationController.disable();
-		else
-			rotationController.enable();
-	}
+    /**
+     * whether the rotation is controlled manually (PID otherwise)
+     * @return true if rotation of all modules is controlled manually, and false otherwise
+     */
+    public boolean isManualRotation() {
+        return manualRotation;
+    }
 
-	/**
-	 * get the velocity this module was set to last
-	 * no guarantee that the motor is running at this velocity
-	 * @return a double in m/s that is the last velocity this module was set to
-	 * @see #set(double)
-	 * @see #goTo(double, double)
-	 * @see #getVelocityRate()
-	 */
-	public double getLastSetVelocity() {
-		return lastSetVelocity;
-	}
+    /**
+     * whether the velocity should be controlled manually (PID otherwise)
+     * enables or disables the PID controller accordingly
+     * @param isOn true if velocity of all modules should be controlled manually, and false otherwise
+     */
+    public void setManualVelocity(boolean isOn) {
+        manualVelocity = isOn;
+        if(manualVelocity)
+            velocityController.disable();
+        else
+            velocityController.enable();
+    }
 
-	/**
-	 * get the rotation this module was set to last, in radians
-	 * no guarantee that the motor is at this rotation
-	 * @return a double between -PI and PI that is the last rotation this module was set to
-	 * @see #rotate(double)
-	 * @see #goTo(double, double)
-	 */
-	public double getLastSetRotation() {
-		return lastSetRotation;
-	}
+    /**
+     * whether the rotation should be controlled manually (PID otherwise)
+     * enables or disables the PID controller accordingly
+     * @param isOn true if rotation of all modules should be controlled manually, and false otherwise
+     */
+    public void setManualRotation(boolean isOn) {
+        manualRotation = isOn;
+        if(manualRotation)
+            rotationController.disable();
+        else
+            rotationController.enable();
+    }
 
-	/**
-	 * gets the linear velocity of the wheel attached to the velocity encoder, using the encoder getRate() method
-	 * @return a double representing the linear velocity of the wheel, in m/s
-	 */
-	public double getVelocityRate() {
-		return this.velocityEncoder.getRate();
-	}
+    /**
+     * get the velocity this module was set to last
+     * no guarantee that the motor is running at this velocity
+     * @return a double in m/s that is the last velocity this module was set to
+     * @see #set(double)
+     * @see #goTo(double, double)
+     * @see #getVelocityRate()
+     */
+    public double getLastSetVelocity() {
+        return lastSetVelocity;
+    }
 
-	/**
-	 * gets the current angle in radians as read from the encoder
-	 * uses the modulo (%) operation to wrap around
-	 * @return a value between -PI and PI, representing the current wheel's rotation
-	 */
-	public double getAngle() {
-		return rotationEncoder.getDistance()%Math.PI;
-	}
+    /**
+     * get the rotation this module was set to last, in radians
+     * no guarantee that the motor is at this rotation
+     * @return a double between -PI and PI that is the last rotation this module was set to
+     * @see #rotate(double)
+     * @see #goTo(double, double)
+     */
+    public double getLastSetRotation() {
+        return lastSetRotation;
+    }
+
+    /**
+     * gets the linear velocity of the wheel attached to the velocity encoder, using the encoder getRate() method
+     * @return a double representing the linear velocity of the wheel, in m/s
+     */
+    public double getVelocityRate() {
+        return this.velocityEncoder.getRate();
+    }
+
+    /**
+     * gets the current angle in radians as read from the encoder
+     * uses the modulo (%) operation to wrap around
+     * @return a value between -PI and PI, representing the current wheel's rotation
+     */
+    public double getAngle() {
+        return rotationEncoder.getDistance()%Math.PI;
+    }
 }

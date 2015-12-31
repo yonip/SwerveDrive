@@ -16,26 +16,26 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	
-	public static final DriveSwerve drive = new DriveSwerve();
 
-	public static final OI oi = new OI();
-	
-	
-	Command autonomousCommand;
-	
-	/**
+    public static final DriveSwerve drive = new DriveSwerve();
+
+    public static final OI oi = new OI();
+
+
+    Command autonomousCommand;
+
+    /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-    	System.out.println("Robot Init Started");
+        System.out.println("Robot Init Started");
         drive.init();
     }
-	
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-	}
+
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
+    }
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
@@ -50,7 +50,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
+        // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.

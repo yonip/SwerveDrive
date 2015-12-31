@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveSwerveRobot extends Command {
 
     public DriveSwerveRobot() {
-    	requires(Robot.drive);
-    	System.out.println("DriveSwerve Robot bueno yaaay");
+        requires(Robot.drive);
+        System.out.println("DriveSwerve Robot bueno yaaay");
     }
 
     protected void initialize() {
     }
 
     protected void execute() {
-    	//Set values to the values given by the joysticks, converted to velocities
+        //Set values to the values given by the joysticks, converted to velocities
         double x = Robot.oi.getSwerveStickX() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
         double y = Robot.oi.getSwerveStickY() * SwerveMap.DEFAULT_MAX_LINEAR_VELOCITY;
         double omega = Robot.oi.getSwerveStickTheta();
@@ -30,11 +30,11 @@ public class DriveSwerveRobot extends Command {
     }
 
     protected boolean isFinished() {
-    	return false;
+        return false;
     }
 
     protected void end() {
-    	Robot.drive.goTo(0, 0, 0);
+        Robot.drive.goTo(0, 0, 0);
     }
 
     protected void interrupted() {

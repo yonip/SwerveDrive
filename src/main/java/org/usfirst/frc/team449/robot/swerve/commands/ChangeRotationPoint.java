@@ -20,7 +20,7 @@ public class ChangeRotationPoint extends Command {
      * @param p the point around which to rotate
      */
     public ChangeRotationPoint(final Point p) {
-    	requires(Robot.drive);
+        requires(Robot.drive);
         this.point = p;
     }
 

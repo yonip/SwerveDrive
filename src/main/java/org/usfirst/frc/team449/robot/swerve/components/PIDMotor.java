@@ -69,9 +69,9 @@ public class PIDMotor extends PIDSubsystem {
         
         //check validity of mode, enable only if mode is valid
         if(mode < 0 || mode > 2)
-        	System.err.println("you fucked up in setting mode for PIDMotor");
+            System.err.println("you fucked up in setting mode for PIDMotor");
         else
-        	this.mode = mode;
+            this.mode = mode;
 
         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
@@ -88,14 +88,14 @@ public class PIDMotor extends PIDSubsystem {
         switch(this.mode)
         {
         case DISTANCE_BASE:
-        	return encoder.getDistance();
-		case SPEED_BASE:
-        	return encoder.getRate();
-		case POSITION_BASE:
-			return encoder.get()*this.distancePerPulse;
-		default:
-        	System.err.println("you fucked up again. I warned that you didn't set mode correctly.");
-        	return 0;
+            return encoder.getDistance();
+        case SPEED_BASE:
+            return encoder.getRate();
+        case POSITION_BASE:
+            return encoder.get()*this.distancePerPulse;
+        default:
+            System.err.println("you fucked up again. I warned that you didn't set mode correctly.");
+            return 0;
         }//end switch
     }//
     
@@ -113,12 +113,12 @@ public class PIDMotor extends PIDSubsystem {
      */
     public void setDistancePerPulse(double dpp)
     {
-    	this.distancePerPulse = dpp;
+        this.distancePerPulse = dpp;
     }
     
     public double getDistancePerPulse()
     {
-    	return this.distancePerPulse;
+        return this.distancePerPulse;
     }
     
     /**
@@ -145,7 +145,7 @@ public class PIDMotor extends PIDSubsystem {
      */
     public void setKp(double newP)
     {  
-    	this.Kp = newP;
+        this.Kp = newP;
         super.getPIDController().setPID(this.Kp, this.Ki, this.Kd);
     }
    
@@ -168,14 +168,10 @@ public class PIDMotor extends PIDSubsystem {
         this.Kd = newD;
         super.getPIDController().setPID(this.Kp, this.Ki, this.Kd);
     }
-        
-    /**
-     * 
-     * @return
-     */
+
     public boolean isEnabled()
     {
-    	return this.getPIDController().isEnable();
+        return this.getPIDController().isEnable();
     }
     
     /**
@@ -184,7 +180,7 @@ public class PIDMotor extends PIDSubsystem {
      */
     public double measureSpeed()
     {
-    	return this.encoder.getRate();
+        return this.encoder.getRate();
     }
 
     /**
@@ -201,7 +197,7 @@ public class PIDMotor extends PIDSubsystem {
      */
     public void resetEncoder()
     {
-    	this.encoder.reset();
+        this.encoder.reset();
     }
     
     /**
@@ -209,7 +205,7 @@ public class PIDMotor extends PIDSubsystem {
      * @return throttle setting
      */
     public double getMotorVal() {
-    	return motor.get();
+        return motor.get();
     }
     
     /**
@@ -217,7 +213,7 @@ public class PIDMotor extends PIDSubsystem {
      */
     public double getEncoderCount()
     {
-    	return this.encoder.get();
+        return this.encoder.get();
     }
     
     /**
@@ -225,6 +221,6 @@ public class PIDMotor extends PIDSubsystem {
      */
     public double getEncoderPosition()
     {
-    	return this.encoder.get() * this.distancePerPulse;
+        return this.encoder.get() * this.distancePerPulse;
     }
 }//end class
