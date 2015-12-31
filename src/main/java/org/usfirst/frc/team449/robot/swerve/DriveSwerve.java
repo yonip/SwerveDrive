@@ -256,12 +256,13 @@ public class DriveSwerve extends Subsystem {
 		// the actual variables that will be passed to the module
 		double magnitude, angleDegrees;
 		// components scaled according to their distance from the center for angular -> linear velocity
-		deltaX = moduleY-rotationPoint.getY();
-		deltaY = moduleX-rotationPoint.getX();
+		// yes, this is correct
+		deltaX = moduleY - rotationPoint.getY();
+		deltaY = moduleX - rotationPoint.getX();
 		// first part for the respective component of the vector rotating, and the second for the vector translating
 		finalVelX = deltaX*rotationRadians + xVelocity;
 		finalVelY = deltaY*rotationRadians + yVelocity;
-		magnitude = Math.sqrt(finalVelX*finalVelX+finalVelY*finalVelY);
+		magnitude = Math.sqrt(finalVelX * finalVelX + finalVelY * finalVelY);
 		angleDegrees = Math.toDegrees(Math.atan2(finalVelY, finalVelX));
 		module.goTo(magnitude, angleDegrees);
 	}
